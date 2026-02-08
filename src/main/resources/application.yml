@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: hr-api
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/hr}
+    username: ${DB_USER:hr}
+    password: ${DB_PASSWORD:hr}
+  sql:
+    init:
+      mode: never
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  jackson:
+    time-zone: UTC
+  cache:
+    type: redis
+    redis:
+      time-to-live: 10m
+server:
+  port: 8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: hr-api
+logging:
+  level:
+    root: INFO
+    com.example.hr: DEBUG
+  pattern:
+    console: '%d{yyyy-MM-dd''T''HH:mm:ss.SSSX} %p %c - %m%n'
+app:
+  security:
+    jwt:
+      issuer: hr-api
+      secret: ${JWT_SECRET:changeit-changeit-changeit-changeit}
+      ttl: 3600
+  attendance:
+    check-in-lock-seconds: 120
+  payroll:
+    run-lock-seconds: 300
