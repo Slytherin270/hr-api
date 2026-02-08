@@ -2,7 +2,7 @@ package com.example.hr.payroll.application;
 
 import com.example.hr.attendance.api.AttendanceQueryApi;
 import com.example.hr.identity.api.EmployeeDirectoryApi;
-import com.example.hr.identity.domain.Employee;
+import com.example.hr.identity.api.EmployeeSummary;
 import com.example.hr.leave.api.LeaveQueryApi;
 import com.example.hr.leave.domain.LeaveRequest;
 import com.example.hr.leave.domain.LeaveType;
@@ -70,11 +70,11 @@ public class PayrollService implements PayrollPaymentApi {
                 throw new DomainException("Payroll already generated for period");
             });
             PayrollRun run = runRepository.save(PayrollRun.create(period, actor, timeProvider.now()));
-            List<Employee> employees = employeeDirectoryApi.activeEmployees();
-            for (Employee employee : employees) {
-                BigDecimal overtime = calculateOvertime(employee.getId(), period);
-                BigDecimal unpaidLeave = calculateUnpaidLeave(employee.getId(), period);
-                Payslip payslip = Payslip.create(run.getId(), employee.getId(), period, BASE_SALARY, overtime, unpaidLeave, BigDecimal.ZERO, actor, timeProvider.now());
+            List<EmployeeSummary> employees = employeeDirectoryApi.activeEmployees();
+            for (EmployeeSummary employee : employees) {
+                BigDecimal overtime = calculateOvertime(employee.id(), period);
+                BigDecimal unpaidLeave = calculateUnpaidLeave(employee.id(), period);
+                Payslip payslip = Payslip.create(run.getId(), employee.id(), period, BASE_SALARY, overtime, unpaidLeave, BigDecimal.ZERO, actor, timeProvider.now());
                 payslipRepository.save(payslip);
             }
             eventPublisher.publishEvent(new PayrollGenerated(run.getId(), period));
