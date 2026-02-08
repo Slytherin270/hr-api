@@ -1,6 +1,7 @@
 package com.example.hr.identity.application;
 
 import com.example.hr.identity.api.EmployeeDirectoryApi;
+import com.example.hr.identity.api.EmployeeSummary;
 import com.example.hr.identity.domain.Employee;
 import com.example.hr.identity.domain.Role;
 import com.example.hr.identity.infra.EmployeeRepository;
@@ -63,9 +64,10 @@ public class EmployeeService implements EmployeeDirectoryApi {
     }
 
     @Override
-    public java.util.List<Employee> activeEmployees() {
+    public java.util.List<EmployeeSummary> activeEmployees() {
         return ((java.util.List<Employee>) repository.findAll()).stream()
                 .filter(employee -> !employee.isDeleted())
+                .map(employee -> new EmployeeSummary(employee.getId()))
                 .toList();
     }
 }
