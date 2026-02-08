@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: hr
+      POSTGRES_USER: hr
+      POSTGRES_PASSWORD: hr
+    ports:
+      - "5432:5432"
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+  app:
+    build: .
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/hr
+      DB_USER: hr
+      DB_PASSWORD: hr
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: changeit-changeit-changeit-changeit
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "8080:8080"
