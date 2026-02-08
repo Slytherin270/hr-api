@@ -2,7 +2,7 @@ package com.example.hr.shared.infra.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration;
-import org.springframework.data.relational.core.convert.JdbcCustomConversions;
+import org.springframework.data.jdbc.core.convert.JdbcCustomConversions;
 
 import java.time.YearMonth;
 import java.util.List;
